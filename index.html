@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Referral Task Monitoring</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #eef6ff;
+            color: #172b4d;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #075fc9, #168cff);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        /* NOTIFICATION */
+        .notification {
+            width: 95%;
+            max-width: 1100px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.12);
+        }
+
+        .notification-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-title h2 {
+            margin: 0;
+            color: #075fc9;
+        }
+
+        .bell {
+            background: #075fc9;
+            color: white;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* ALERT */
+        .system-alert {
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 9px;
+            border-left: 6px solid;
+        }
+
+        .warning {
+            background: #fff4cc;
+            border-color: #f2b900;
+            color: #765700;
+        }
+
+        .urgent {
+            background: #ffe0e0;
+            border-color: #e00000;
+            color: #a00000;
+        }
+
+        .overdue {
+            background: #ffd1d1;
+            border-color: #b00000;
+            color: #8b0000;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.10);
+        }
+
+        .card h2 {
+            color: #075fc9;
+            margin-top: 0;
+        }
+
+        /* FORM */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 2px solid #c8e3ff;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #168cff;
+        }
+
+        textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 13px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0867d8;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .add-btn:active {
+            background: #034b9e;
+        }
+
+        /* SUMMARY */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-box {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,.10);
+        }
+
+        .summary-box h3 {
+            font-size: 28px;
+            margin: 5px;
+            color: #075fc9;
+        }
+
+        .summary-box p {
+            margin: 0;
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #075fc9;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 11px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* STATUS */
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-ongoing {
+            background: #fff1bd;
+            color: #876000;
+        }
+
+        .status-completed {
+            background: #cdf5d9;
+            color: #08752b;
+        }
+
+        .status-overdue {
+            background: #ffd1d1;
+            color: #a00000;
+        }
+
+        /* BUTTONS */
+        .complete-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #003b70;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚨 Referral Task Monitoring</h1>
+    <p>Monitor • Track • Alert • Accomplish</p>
+</header>
+
+
+<!-- SYSTEM ALERT -->
+<div class="notification">
+
+    <div class="notification-title">
+        <h2>🔔 System Alerts</h2>
+
+        <span class="bell" id="alertCount">
+            0
+        </span>
+    </div>
+
+    <div id="alertArea">
+
+        <p>No alerts at the moment.</p>
+
+    </div>
+
+</div>
+
+
+<div class="container">
+
+    <!-- SUMMARY -->
+    <div class="summary">
+
+        <div class="summary-box">
+            <h3 id="totalTasks">0</h3>
+            <p>📋 Total Tasks</p>
+        </div>
+
+        <div class="summary-box">
+            <h3 id="ongoingTasks">0</h3>
+            <p>🟡 Ongoing</p>
+        </div>
+
+        <div class="summary-box">
+            <h3 id="completedTasks">0</h3>
+            <p>✅ Completed</p>
+        </div>
+
+        <div class="summary-box">
+            <h3 id="overdueTasks">0</h3>
+            <p>🔴 Overdue</p>
+        </div>
+
+    </div>
+
+
+    <!-- ADD REFERRAL -->
+    <div class="card">
+
+        <h2>➕ Enter Referral Task</h2>
+
+        <label>
+            Referral / Task
+        </label>
+
+        <input
+            type="text"
+            id="taskName"
+            placeholder="Example: Referral #001">
+
+
+        <label>
+            Description
+        </label>
+
+        <textarea
+            id="taskDescription"
+            placeholder="Enter task details or notes...">
+        </textarea>
+
+
+        <label>
+            Start Date
+        </label>
+
+        <input
+            type="date"
+            id="startDate">
+
+
+        <button
+            class="add-btn"
+            onclick="addTask()">
+
+            ➕ ADD REFERRAL
+
+        </button>
+
+    </div>
+
+
+    <!-- TASK MONITORING -->
+    <div class="card">
+
+        <h2>📊 Referral Task Monitoring</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Referral / Task</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Days Left</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="taskTable">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    Referral Task Monitoring System © 2026
+</footer>
+
+
+<script>
+
+    let tasks = [];
+
+
+    /* ADD REFERRAL */
+    function addTask() {
+
+        let name =
+            document.getElementById("taskName").value.trim();
+
+        let description =
+            document.getElementById("taskDescription").value.trim();
+
+        let start =
+            document.getElementById("startDate").value;
+
+
+        if (name === "" || start === "") {
+
+            alert(
+                "Please enter the referral/task and start date."
+            );
+
+            return;
+        }
+
+
+        /* 14 DAYS = 2 WEEKS */
+
+        let startDate = new Date(start);
+
+        let deadline = new Date(startDate);
+
+        deadline.setDate(
+            deadline.getDate() + 14
+        );
+
+
+        let task = {
+
+            name: name,
+
+            description:
+                description || "No description",
+
+            start: start,
+
+            deadline:
+                deadline.toISOString().split("T")[0],
+
+            completed: false
+
+        };
+
+
+        tasks.push(task);
+
+
+        /* CLEAR INPUT */
+
+        document.getElementById("taskName").value = "";
+
+        document.getElementById("taskDescription").value = "";
+
+        document.getElementById("startDate").value = "";
+
+
+        displayTasks();
+
+    }
+
+
+    /* DISPLAY TASKS */
+
+    function displayTasks() {
+
+        let table =
+            document.getElementById("taskTable");
+
+        table.innerHTML = "";
+
+
+        let ongoing = 0;
+        let completed = 0;
+        let overdue = 0;
+
+
+        tasks.forEach((task, index) => {
+
+            let today = new Date();
+
+            today.setHours(0, 0, 0, 0);
+
+
+            let deadline =
+                new Date(task.deadline);
+
+            deadline.setHours(0, 0, 0, 0);
+
+
+            let daysLeft =
+                Math.ceil(
+                    (deadline - today) /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            let status;
+            let daysText;
+
+
+            if (task.completed) {
+
+                status =
+                    `<span class="status status-completed">
+                        COMPLETED
+                     </span>`;
+
+                daysText = "Done";
+
+                completed++;
+
+            }
+
+            else if (daysLeft < 0) {
+
+                status =
+                    `<span class="status status-overdue">
+                        OVERDUE
+                     </span>`;
+
+                daysText =
+                    Math.abs(daysLeft) +
+                    " day(s) overdue";
+
+                overdue++;
+
+            }
+
+            else {
+
+                status =
+                    `<span class="status status-ongoing">
+                        ONGOING
+                     </span>`;
+
+                daysText =
+                    daysLeft + " day(s) left";
+
+                ongoing++;
+
+            }
+
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>${index + 1}</td>
+
+                    <td>
+                        <b>${task.name}</b>
+                    </td>
+
+                    <td>
+                        ${task.description}
+                    </td>
+
+                    <td>
+                        ${task.start}
+                    </td>
+
+                    <td>
+                        ${task.deadline}
+                    </td>
+
+                    <td>
+                        ${status}
+                    </td>
+
+                    <td>
+                        ${daysText}
+                    </td>
+
+                    <td>
+
+                        ${
+                            !task.completed
+
+                            ?
+
+                            `<button
+                                class="complete-btn"
+                                onclick="completeTask(${index})">
+
+                                ✓
+
+                            </button>`
+
+                            :
+
+                            ""
+                        }
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteTask(${index})">
+
+                            🗑
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        /* UPDATE SUMMARY */
+
+        document.getElementById("totalTasks")
+            .textContent = tasks.length;
+
+        document.getElementById("ongoingTasks")
+            .textContent = ongoing;
+
+        document.getElementById("completedTasks")
+            .textContent = completed;
+
+        document.getElementById("overdueTasks")
+            .textContent = overdue;
+
+
+        checkAlerts();
+
+    }
+
+
+    /* COMPLETE */
+
+    function completeTask(index) {
+
+        tasks[index].completed = true;
+
+        displayTasks();
+
+    }
+
+
+    /* DELETE */
+
+    function deleteTask(index) {
+
+        if (
+            confirm("Delete this referral?")
+        ) {
+
+            tasks.splice(index, 1);
+
+            displayTasks();
+
+        }
+
+    }
+
+
+    /* SYSTEM ALERT */
+
+    function checkAlerts() {
+
+        let alertArea =
+            document.getElementById("alertArea");
+
+        let alertCount =
+            document.getElementById("alertCount");
+
+
+        alertArea.innerHTML = "";
+
+        let count = 0;
+
+
+        tasks.forEach(task => {
+
+            if (task.completed) {
+                return;
+            }
+
+
+            let today = new Date();
+
+            today.setHours(0, 0, 0, 0);
+
+
+            let deadline =
+                new Date(task.deadline);
+
+            deadline.setHours(0, 0, 0, 0);
+
+
+            let daysLeft =
+                Math.ceil(
+                    (deadline - today) /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            /* OVERDUE */
+
+            if (daysLeft < 0) {
+
+                count++;
+
+                alertArea.innerHTML += `
+
+                    <div class="system-alert overdue">
+
+                        🚨 <b>OVERDUE ALERT</b><br>
+
+                        ${task.name}
+
+                        is already
+
+                        <b>
+                            ${Math.abs(daysLeft)}
+                            day(s) overdue.
+                        </b>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* DUE TODAY */
+
+            else if (daysLeft === 0) {
+
+                count++;
+
+                alertArea.innerHTML += `
+
+                    <div class="system-alert urgent">
+
+                        🚨 <b>URGENT ALERT</b><br>
+
+                        ${task.name}
+
+                        is
+
+                        <b>DUE TODAY!</b>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* 3 DAYS BEFORE */
+
+            else if (daysLeft <= 3) {
+
+                count++;
+
+                alertArea.innerHTML += `
+
+                    <div class="system-alert warning">
+
+                        ⚠️ <b>WARNING ALERT</b><br>
+
+                        ${task.name}
+
+                        is due in
+
+                        <b>
+                            ${daysLeft} day(s)
+                        </b>.
+
+                        Please accomplish
+                        this task before
+                        the deadline.
+
+                    </div>
+
+                `;
+
+            }
+
+        });
+
+
+        /* NO ALERT */
+
+        if (count === 0) {
+
+            alertArea.innerHTML = `
+                <p>✅ No alerts at the moment.</p>
+            `;
+
+        }
+
+
+        /* NOTIFICATION NUMBER */
+
+        alertCount.textContent = count;
+
+    }
+
+
+    /* INITIAL */
+
+    displayTasks();
+
+</script>
+
+</body>
+</html>
